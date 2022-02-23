@@ -115,7 +115,9 @@ Query 8:  Display the passenger name and percentage of distance travelled
 by that passenger from the total distance travelled by all passengers 
 without using user variables */
 
-SELECT Passenger_name, Distance * 100.0/ (SELECT SUM(Distance) FROM Passenger) FROM Passenger GROUP BY Distance;
+SELECT Passenger_Name, round(( Distance / TotalDistance ) * 100) AS PercentageOfDistance
+FROM Passenger 
+INNER JOIN (SELECT SUM(Distance) AS TotalDistance FROM Passenger) AS TOTAL;
 
 
 /*Problem 11
