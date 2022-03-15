@@ -16,10 +16,10 @@ CREATE TABLE Passenger (
 );
 
 CREATE TABLE PRICE( 
-  Bus_Type varchar(20) ,
+  Bus_Type varchar(20),
   Distance int,
   Price int
-  -- foreign key (Distance) references PASSENGER(Distance)
+  
  );
  
 -- Problem 2
@@ -72,7 +72,7 @@ SELECT MIN(Price) FROM PRICE WHERE Bus_Type = 'Sleeper';
 /* problem 5
 Query 3:  Select passenger names whose names start with character 'S' */
 
-SELECT * FROM Passenger WHERE Passenger_name LIKE 's%';
+SELECT Passenger_name FROM Passenger WHERE Passenger_name LIKE 's%';
 
 
 /* Problem 6
@@ -87,18 +87,21 @@ WHERE p1.Distance = p2.Distance and p1.Bus_type = p2.Bus_type;
 /* Problem 7
 Query 5: What are the passenger name/s and his/her ticket price
 who travelled in the Sitting bus for a distance of 1000 KMs */
-SELECT p1.Passenger_name, p1.Boarding_city, p1.Destination_city, p1.Bus_type, p2.Price
-FROM Passenger p1, PRICE p2 
-WHERE p1.Distance = 1000 and p1.Bus_type = 'Sitting' and p1.Distance = 1000
-	  and p1.Bus_type = 'Sitting';
-      
-      
+SELECT Passenger_name, Price,ps.Bus_Type 
+FROM Passenger ps , PRICE pr 
+where  ps.Distance = pr.Distance 
+AND ps.Bus_Type = pr.Bus_Type
+and ps.Bus_Type = 'Sitting'
+AND ps.Distance >= 1000;
+
+
+     
 /* Problem 8
 Query 6: What will be the Sitting and Sleeper bus charge for Pallavi to travel 
 from Bangalore to Panaji? */
 
-SELECT DISTINCT p1.Passenger_name, p1.Boarding_city,
-				p1.Destination_city, p2.Bus_type, p2.Price 
+SELECT DISTINCT p1.Passenger_name, p1.Destination_city,
+				p1.Boarding_city, p2.Bus_type, p2.Price 
 FROM Passenger p1, PRICE p2
 WHERE Passenger_name = 'Pallavi' and p1.Distance = p2.Distance;
 
@@ -119,14 +122,13 @@ SELECT Passenger_Name, round(( Distance / TotalDistance ) * 100) AS PercentageOf
 FROM Passenger 
 INNER JOIN (SELECT SUM(Distance) AS TotalDistance FROM Passenger) AS TOTAL;
 
-
 /*Problem 11
 Query 9: Display the distance, price in three categories in table Price */
 
 -- a) Expensive if the cost is more than 1000
 -- b) Average Cost if the cost is less than 1000 and greater than 500
 -- c) Cheap otherwise*/
-select DISTINCT P.Distance, P1.Bus_Type, P1.Price, 
+select DISTINCT P.Distance, P1.Price, 
 	case 
 		when P1.Price >1000 then 'Expensive'
         when P1.Price >500 and P1.Price <1000 then 'Average Cost'
