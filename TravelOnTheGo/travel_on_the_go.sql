@@ -118,9 +118,12 @@ Query 8:  Display the passenger name and percentage of distance travelled
 by that passenger from the total distance travelled by all passengers 
 without using user variables */
 
-SELECT Passenger_Name, round(( Distance / TotalDistance ) * 100) AS PercentageOfDistance
-FROM Passenger 
-INNER JOIN (SELECT SUM(Distance) AS TotalDistance FROM Passenger) AS TOTAL;
+-- SELECT Passenger_Name, round(( Distance / TotalDistance ) * 100) AS PercentageOfDistance
+-- FROM Passenger 
+-- INNER JOIN (SELECT SUM(Distance) AS TotalDistance FROM Passenger) AS TOTAL;
+
+select psg.Passenger_name, round((psg.Distance/ (select sum(Distance) from Passenger))*100) AS PercentageOfDistance
+from Passenger psg; 
 
 /*Problem 11
 Query 9: Display the distance, price in three categories in table Price */
@@ -128,10 +131,17 @@ Query 9: Display the distance, price in three categories in table Price */
 -- a) Expensive if the cost is more than 1000
 -- b) Average Cost if the cost is less than 1000 and greater than 500
 -- c) Cheap otherwise*/
-select DISTINCT P.Distance, P1.Price, 
+-- select DISTINCT P.Distance, P1.Price, 
+-- 	case 
+-- 		when P1.Price >1000 then 'Expensive'
+--         when P1.Price >500 and P1.Price <1000 then 'Average Cost'
+--         else 'Cheap' end as price_check
+-- from PRICE P1, Passenger P
+-- where P1.Bus_Type= P.Bus_Type; 
+
+select DISTINCT P1.Distance, P1.Price, 
 	case 
 		when P1.Price >1000 then 'Expensive'
         when P1.Price >500 and P1.Price <1000 then 'Average Cost'
-        else 'Cheap' end as price_check
-from PRICE P1, Passenger P
-where P1.Bus_Type= P.Bus_Type; 
+        else 'Cheap' end as Price_Check
+from PRICE P1;
